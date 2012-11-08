@@ -1,0 +1,85 @@
+<!DOCTYPE HTML>
+<html lang="EN" class="sb-html">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Form Example</title>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+<script src="forms.js"></script>
+<script src="plugins/modified.js"></script>
+<script src="plugins/confirm.js"></script>
+<script src="plugins/placeholder.js"></script>
+<script src="plugins/errors.js"></script>
+<style>
+
+body {
+    font: normal 11px sans-serif;
+}
+
+.field + .field {
+    margin-top: 5px;
+}
+
+.field label {
+    display: inline-block;
+    width: 80px;
+
+}
+
+
+input:required { border-color: black;}
+input:optional { border-color: #cccccc;; }
+
+input:required {}
+input:focus:invalid {}
+input:valid {}
+
+
+</style>
+
+</head>
+<body>
+    
+<form id="test" name="test">
+
+<div class="field">
+    <label for="date">Date</label> 
+    <input id="date" name="date" type="date" placeholder="YYYY-MM-DD" size="10">
+</div>
+
+<div class="field">
+    <label for="pattern">Pattern</label> 
+    <input id="name" name="pattern" type="text" pattern="[0-9]+">
+</div>
+
+<div class="field">
+    <label for="name">Name</label> 
+    <input id="name" name="name" type="text" required="required">
+</div>
+
+<div class="field">
+    <label for="email">Email</label> 
+    <input id="email" name="email" type="email">
+</div>
+
+<br />
+<button type="submit"> Submit </button>
+
+</form>
+
+<script>
+
+
+$(document).ready(function()
+{
+    var form = new Form("#test");
+//    form.setConfirm();    
+    form.enhance();
+
+
+});
+
+
+</script>
+
+</body>
+</html>
