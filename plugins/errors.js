@@ -8,6 +8,11 @@ Form.addEnhancement(function()
 
 function errorHandler(form)
 {
+    // Form is set not to validate
+    if (form.forms.prop('noValidate')) {
+        return;
+    }
+
     var self = this;
     this.form = form;
     this.forms = form.forms;
@@ -22,6 +27,7 @@ function errorHandler(form)
         'pattern' : 'Please match the required format'
     };
 
+
     // Prevent browser based form validation
 //    form.forms.prop('noValidate', true);
 
@@ -30,22 +36,6 @@ function errorHandler(form)
     var input = document.createElement('input');
     input.type = 'date';
     this.hasDate = input.type == 'date' ? true : false;
-
-    form.forms.on('submit', function(evt)
-    {
-        self.submitPressed = true;
-
-        // Manually perform validity check for yesterday's browsers
-        if (false == self.hasOnInvalid) {
-            if (self.validate() == false) {
-                $('.invalid', this).first().trigger('invalid');
-                evt.preventDefault();
-            }
-        }
-
-
-    //    console.log(this.date.validity);
-    });
 
     this.forms.on('blur', ':input', function()
     {
@@ -57,11 +47,11 @@ function errorHandler(form)
         self.validate(this);
     });
 
-    $(':input', form.forms).on('invalid',  function(evt)
+    $(':input', form.forms).each(function()
     {
-        $(this).focus();
-        self.errorMessage(this);
-        evt.preventDefault();
+        this.addEventListener('invalid', function(evt)
+        {
+        }, false);    
     });
 
     this.checkValidity = function(input)
@@ -100,7 +90,7 @@ function errorHandler(form)
                 break;
             }
         }
-
+    
         if (isValid == true && input.checkValidity && input.checkValidity() == false) {
             isValid = false;
             var validity = input.validity;
@@ -129,6 +119,11 @@ function errorHandler(form)
 
             return true;
         } else {
+            // Manually Trigger oninvalid event for browsers that don't support it
+            if (false == self.hasOnInvalid) {
+                $(input).trigger('invalid');
+            }
+
             $(input).removeClass('valid');
             $(input).addClass('invalid');
 
@@ -244,7 +239,50 @@ function errorHandler(form)
         }
     }, messages.date);
 
+
+    var submit = function(evt)
+    {
+        self.submitPressed = true;
+
+        if (self.validate()) {
+            return true;
+        }
+
+        var form
+        
+        if (this.form) {
+            form = this.form;
+        } else if ($(this).attr('form')) {
+            form = $('#' + $(this).attr('form'))[0];
+        }
+            
+        if (!form) {
+            return;
+        }
+
+
+        self.errorMessage($('.invalid', form).first());
+
+        evt.preventDefault();    
+    };
+
+
+    /* Search for any button which might submit the form
+     * we would like to detect if they are pressed so we can substitute our own form validation
+    */
+    this.forms.each(function()
+    {
+        var buttons = $('button[type="submit"]:not([form]), button[type=""]:not([form]), button:not([type]):not([form]), input[type="submit"]:not([form]), input[type="image"]', this);
+
+        if (this.id) {
+            buttons = $('button[form="' + this.id + '"][type="submit"]:not(form[id!="' + this.id + '"] button)').add(buttons);
+        } 
+
+        buttons.on('click', submit);
+   });
+
     this.validate();
+
 };
 
 errorHandler.prototype.validate = function()
@@ -294,5 +332,11 @@ errorHandler.prototype.removeValidity = function(input)
 errorHandler.prototype.errorMessage = function(input)
 {
     input.focus();
-
 }
+
+
+/* Notes: 
+
+input.validationMessage - get the browser default validation message lame in Safari
+
+*/
