@@ -1,6 +1,6 @@
 /* Add Placeholder support to older browsers
 */
-Form.addEnhancement(function()
+jqueryForm.addEnhancement(function()
 {
     this.forms.find(":input[placeholder]").each(function()
     {

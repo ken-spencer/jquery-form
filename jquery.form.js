@@ -1,10 +1,10 @@
-var Form = function(selector)
+var jqueryForm = function(selector)
 {
     this.forms = $(selector);
 
     this.enhance  = function()
     {
-        for (var i = 0, enhancement; enhancement = Form.enhancements[i]; i++) {
+        for (var i = 0, enhancement; enhancement = jqueryForm.enhancements[i]; i++) {
             enhancement.call(this);       
         }
 
@@ -27,13 +27,13 @@ var Form = function(selector)
     }
 }
 
-Form.enhancements = [];
+jqueryForm.enhancements = [];
 
-Form.fn = Form.prototype;
+jqueryForm.fn = jqueryForm.prototype;
 
-Form.addEnhancement = function(enhancement)
+jqueryForm.addEnhancement = function(enhancement)
 {
-    Form.enhancements.push(enhancement);
+    jqueryForm.enhancements.push(enhancement);
 }
 
 

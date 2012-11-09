@@ -5,7 +5,7 @@
 {
     /* Returns the form fields which have been modified 
     */
-    Form.fn.modified = function() 
+    jqueryForm.fn.modified = function() 
     {
 
         return $(':input', this.forms).filter(function()
@@ -34,7 +34,7 @@
 
     /* Return true if form has modified fields
     */
-    Form.fn.hasModified = function() 
+    jqueryForm.fn.hasModified = function() 
     {
         var modified = this.modified();
 

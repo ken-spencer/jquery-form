@@ -2,7 +2,7 @@
 *  requires enhancements/modified.js
 */
 
-Form.fn.setConfirm = function(message)
+jqueryForm.fn.setConfirm = function(message)
 {
     var self = this;
     var submit = false;

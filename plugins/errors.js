@@ -1,4 +1,4 @@
-Form.addEnhancement(function()
+jqueryForm.addEnhancement(function()
 {
     var handler = new errorHandler(this);
     handler.modernize();
