@@ -1,6 +1,6 @@
-[submodule "contrib/dialog"]
-	path = contrib/dialog
-	url = https://github.com/ken-spencer/jquery-dialog.git
 [submodule "contrib/showdown"]
 	path = contrib/showdown
 	url = https://github.com/coreyti/showdown.git
+[submodule "contrib/dialog"]
+	path = contrib/dialog
+	url = https://github.com/ken-spencer/jquery-dialog.git
