@@ -37,14 +37,19 @@ function errorHandler(form)
     input.type = 'date';
     this.hasDate = input.type == 'date' ? true : false;
 
-    this.forms.on('blur', ':input', function()
+    this.forms.on('blur', ':input', function(evt)
     {
-        $(this).data('userInteraction', true);
+        $(this).data('userInteraction', true).addClass('user-interacted');
         self.validate(this);
+
+        $(this).dialogClose();
     })
     .on('focus', ':input', function()
     {
         self.validate(this);
+        if ($(this).hasClass('user-error')) {
+            self.errorMessage(this);
+        }
     });
 
     $(':input', form.forms).each(function()
@@ -208,7 +213,6 @@ function errorHandler(form)
             return true;
         }
 
-
         var pattern = $(input).attr('pattern');
 
         if (
@@ -260,8 +264,10 @@ function errorHandler(form)
             return;
         }
 
+        $(":input", form).addClass('user-interacted');
 
-        self.errorMessage($('.invalid', form).first());
+        var input = $('.invalid', form).first();
+        input.focus();
 
         evt.preventDefault();    
     };
@@ -331,7 +337,12 @@ errorHandler.prototype.removeValidity = function(input)
 
 errorHandler.prototype.errorMessage = function(input)
 {
-    input.focus();
+    var input = $(input);
+    if (jQuery.fn.dialogOpen) {
+        $(input).dialogOpen(input.data('_error_message'), {'stem' : true});
+    } else {
+    }    
+
 }
 
 
