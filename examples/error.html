@@ -4,16 +4,16 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>Form Example</title>
 
-<link rel="stylesheet" type="text/css" href="contrib/dialog/dialog.css" />
+<link rel="stylesheet" type="text/css" href="../contrib/dialog/dialog.css" />
 
 
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
-<script src="jquery.form.js"></script>
-<script src="plugins/modified.js"></script>
-<script src="plugins/confirm.js"></script>
-<script src="plugins/placeholder.js"></script>
-<script src="plugins/errors.js"></script>
-<script src="contrib/dialog/jquery.dialog.js"></script>
+<script src="../jquery.form.js"></script>
+<script src="../plugins/modified.js"></script>
+<script src="../plugins/confirm.js"></script>
+<script src="../plugins/placeholder.js"></script>
+<script src="../plugins/errors.js"></script>
+<script src="../contrib/dialog/jquery.dialog.js"></script>
 <style>
 
 body {
@@ -56,6 +56,10 @@ input[type="date"].user-interacted.invalid {
     background:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAANCAYAAACgu+4kAAABc0lEQVQoFXWSuy9EURDGf2OxiEeIRzxylRIaiXILLY1CoaARhfgbFApCJ0Gio9jEVhoSr0Kh02qpRCKIziPxPr5zudy9uzvJyTnnm5lvvplzcM5RamVhsZQvwssoYVtmYx8wu2M2WSIkhM0zJe3QLH0LFzUQdMH1JfROOPeQjPP3ogruYc4722BD22enlPh7UYt6ifYcdG/C8y5se+wAjk7g9RB6opj4XqDgFdbKoaYJvnzFO0i/QGXtr6qkijyCnFlGExlpUZQc6iBkERcYjGs2g/4ctzyCN1hNy1uvJaLAByqxQ4pCE76ybZb6vYbbH0HWbFpJA2HZn4jg1KxaWHNEILhfcmYKCCS9Xg0v+MrV/96UsJwUECOgCub3zJqjsFCBPsySgFbfe8z2M86NdugVYpg/NjWoWITZlj6JJn+m5IpwWpEHrp7g+AaG26FdrxC3z0foG3LuvOwd1iuU3Bh3/5wDDXSqVcl+sAlL1cGyx74BaleTlQ/sjBIAAAAASUVORK5CYII=) no-repeat center right;
 }
 
+input[type="radio"].invalid {
+    outline: solid 1px red;
+}
+
 </style>
 
 </head>
@@ -86,6 +90,16 @@ input[type="date"].user-interacted.invalid {
 <div class="field">
     <label for="optional">Optional</label> 
     <input id="optional" name="optional" type="text">
+</div>
+
+<div class="field">
+    <label>
+    <input value="yes" name="radio" type="radio" required="required">
+    Yes </label>
+
+    <label>
+    <input value="no" name="radio" type="radio" required="required">
+    No </label>
 </div>
 
 <br />
