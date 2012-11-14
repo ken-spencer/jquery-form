@@ -6,16 +6,17 @@ jqueryForm.addEnhancement(function()
     this.errorHandler = handler;
 });
 
-function errorHandler(form)
+function errorHandler(jqueryForm)
 {
+    this.jqueryForm = jqueryForm;
+    this.form = jqueryForm.form;
+
     // Form is set not to validate
-    if (form.forms.prop('noValidate')) {
+    if (this.form.prop('noValidate')) {
         return;
     }
 
     var self = this;
-    this.form = form;
-    this.forms = form.forms;
     this._validities = [];
 
     this.submitPressed = false;
@@ -29,7 +30,7 @@ function errorHandler(form)
 
 
     // Prevent browser based form validation
-//    form.forms.prop('noValidate', true);
+//    this.form.prop('noValidate', true);
 
     // checkValidity()
     // setCustomValidity()
@@ -37,7 +38,7 @@ function errorHandler(form)
     input.type = 'date';
     this.hasDate = input.type == 'date' ? true : false;
 
-    this.forms.on('blur', ':input', function(evt)
+    this.form.on('blur', ':input', function(evt)
     {
         $(this).data('userInteraction', true).addClass('user-interacted');
         self.validate(this);
@@ -52,7 +53,7 @@ function errorHandler(form)
         }
     });
 
-    $(':input', form.forms).each(function()
+    $(':input', this.form).each(function()
     {
         this.addEventListener('invalid', function(evt)
         {
@@ -83,11 +84,18 @@ function errorHandler(form)
 
         */
 
+        if (!input.name) {
+            return true;
+        }
+
+
+        var value = this.getValue(input);
+
         var isValid = true;
         var type = 'unknown';
 
         for (var i = 0, validity; validity = this._validities[i]; i++) {
-            if (validity.callback.call(this, input)) {
+            if (validity.callback.call(this, input, value)) {
                 this.removeValidity(input);
             } else {
                 this.setValidity(input, validity.message, validity.name);
@@ -118,22 +126,25 @@ function errorHandler(form)
             $(input).data('_error_message', message);
         }
 
+        // to handle fileds linke radio buttons that have multiple inputs with same name
+        var list = $('input[name="' + input.name + '"]', input.form);
+
         if (isValid == true) {
-            $(input).removeClass('user-error invalid');
-            $(input).addClass('valid');
+            list.removeClass('user-error invalid');
+            list.addClass('valid');
 
             return true;
         } else {
             // Manually Trigger oninvalid event for browsers that don't support it
             if (false == self.hasOnInvalid) {
-                $(input).trigger('invalid');
+                list.trigger('invalid');
             }
 
-            $(input).removeClass('valid');
-            $(input).addClass('invalid');
+            list.removeClass('valid');
+            list.addClass('invalid');
 
             if (this.submitPressed || $(input).data('userInteraction')) {
-                $(input).addClass('user-error');
+                list.addClass('user-error');
             }
 
             return false;        
@@ -141,12 +152,15 @@ function errorHandler(form)
     };
 
     // Browser does not support oninvalid polyfill it
-//    if (false == this.hasOnInvalid) {
-        form.forms.on('input', ':input', function()
-        {
-            self.checkValidity(this);
-        });
-//    }
+    this.form.on('input', ':input', function()
+    {
+        self.checkValidity(this);
+    });
+
+    this.form.on('click', 'input[type="checkbox"], input[type="radio"]', function()
+    {
+        self.checkValidity(this);
+    });
 
     /* Safari has partial support for HTML5 validation. This allows us to test for actual support of the
     *  oninvalid method so we can trigger it manually. 
@@ -176,10 +190,10 @@ function errorHandler(form)
 
 
     // Required Error for older browsers
-    this.addCustomValidity('required', function(input)
+    this.addCustomValidity('required', function(input, value)
     {
         if (
-            input.value.length == 0 
+            value.length == 0 
             && !('required' in input)
             && $(input).attr('required')
         ) {
@@ -191,13 +205,13 @@ function errorHandler(form)
     }, messages.required);
 
     // Email Matching for browsers that don't support it
-    this.addCustomValidity('email', function(input)
+    this.addCustomValidity('email', function(input, value)
     {
         if (
-            input.value.length 
+            value.length 
             && $(input).prop('type') == 'text'
             && $(input).attr('type') == 'email'
-            && !input.value.match(/.+@.+\..+/)
+            && !value.match(/.+@.+\..+/)
         ) {
             return false
         } else {
@@ -207,7 +221,7 @@ function errorHandler(form)
     }, messages.email);
 
     // Pattern Matching for browsers that don't support it
-    this.addCustomValidity('pattern', function(input)
+    this.addCustomValidity('pattern', function(input, value)
     {
         if (input.value.length == 0) {
             return true;
@@ -229,13 +243,13 @@ function errorHandler(form)
 
 
     // Date Matching for browsers that don't support it
-    this.addCustomValidity('date', function(input)
+    this.addCustomValidity('date', function(input, value)
     {
         if (
-            input.value.length 
+            value.length 
             && $(input).prop('type') == 'text'
             && $(input).attr('type') == 'date'
-            && !input.value.match(/^[0-9]{4}-[0-1][0-9]-[0-1][0-9]$/)
+            && !value.match(/^[0-9]{4}-[0-1][0-9]-[0-1][0-9]$/)
         ) {
             return false
         } else {
@@ -252,7 +266,7 @@ function errorHandler(form)
             return true;
         }
 
-        var form
+        var form;
         
         if (this.form) {
             form = this.form;
@@ -276,7 +290,7 @@ function errorHandler(form)
     /* Search for any button which might submit the form
      * we would like to detect if they are pressed so we can substitute our own form validation
     */
-    this.forms.each(function()
+    this.form.each(function()
     {
         var buttons = $('button[type="submit"]:not([form]), button[type=""]:not([form]), button:not([type]):not([form]), input[type="submit"]:not([form]), input[type="image"]', this);
 
@@ -295,8 +309,15 @@ errorHandler.prototype.validate = function()
 {
     var self = this;
     var valid = true;
-    $(':input',  this.forms).each(function()
+    var checked = {};
+    $(':input',  this.form).each(function()
     {
+        // We only want to check fields with same name once
+        if (checked[this.name]) {
+            return true;
+        }
+        checked[this.name] = true; 
+
         valid &= self.checkValidity(this);
     });
 
@@ -307,7 +328,7 @@ errorHandler.prototype.modernize = function()
 {
     // Add Calendar Controls if not supported
     if (this.hasDate == false) {
-        $('input[type="date"]', this.forms).addClass('date-emulation');
+        $('input[type="date"]', this.form).addClass('date-emulation');
     }
 }
 
@@ -345,6 +366,30 @@ errorHandler.prototype.errorMessage = function(input)
 
 }
 
+errorHandler.prototype.getValue = function(input)
+{
+    var type = input.type;
+    
+    var query = $('input[name="' + input.name + '"]', input.form);
+
+    var value = '';
+    switch (type) {
+    case 'radio':
+    case 'checkbox':
+        // last() only applies to checkboxes
+        value = query.filter(':checked').last().val();
+        break;
+    default:
+        value = query.filter(function()
+        {
+            return this.value.length ? true : false;
+        }).last().val();
+
+        break;        
+    }
+  
+    return typeof(value) == 'undefined' ? '' : value;      
+}
 
 /* Notes: 
 
