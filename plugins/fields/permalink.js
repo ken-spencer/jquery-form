@@ -1,7 +1,7 @@
     this.permalinks = function()
     {
 
-        $('.permalink-field input', this.forms).on('change', function()
+        $('.permalink-field input', this.form).on('change', function()
         {
             this.value = $.trim(this.value)
             .toLowerCase()
@@ -9,7 +9,7 @@
             .replace(/[^a-zA-Z0-9-_]/g, '');;
         });
     
-        $('.permalink-field input', this.forms).each(function()
+        $('.permalink-field input', this.form).each(function()
         {
             var id = $(this).data('title-id');
 

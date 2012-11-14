@@ -8,7 +8,7 @@
     jqueryForm.fn.modified = function() 
     {
 
-        return $(':input', this.forms).filter(function()
+        return $(':input', this.form).filter(function()
         {           
             var element = this;
 

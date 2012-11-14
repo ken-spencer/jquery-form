@@ -1,6 +1,6 @@
 var jqueryForm = function(selector)
 {
-    this.forms = this.form = $(selector).first();
+    this.form = $(selector).first();
 
     this.enhance  = function()
     {
@@ -13,16 +13,16 @@ var jqueryForm = function(selector)
         this.calendar();
         
         if (window.sb_markdown) {
-            this.forms.find('textarea.markdown').each(sb_markdown);
+            this.form.find('textarea.markdown').each(sb_markdown);
         }
         
-        this.forms.each(function()
+        this.form.each(function()
         {
             var e = new sbErrors(this);
             e.actions();
         });
 
-        this.forms.find(":input[placeholder]").each(placeholders);
+        this.form.find(":input[placeholder]").each(placeholders);
     */
     }
 }

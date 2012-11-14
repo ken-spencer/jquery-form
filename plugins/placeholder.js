@@ -2,7 +2,7 @@
 */
 jqueryForm.addEnhancement(function()
 {
-    this.forms.find(":input[placeholder]").each(function()
+    this.form.find(":input[placeholder]").each(function()
     {
         
         if (typeof(this.placeholder) != 'undefined') {

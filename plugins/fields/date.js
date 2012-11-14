@@ -1,6 +1,6 @@
     this.calendar = function()
     {
-        this.forms.on('click', ".date-field-calendar-button", function(evt)
+        this.form.on('click', ".date-field-calendar-button", function(evt)
         {
             var button = this;
 
