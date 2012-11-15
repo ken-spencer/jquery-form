@@ -55,13 +55,6 @@ function errorHandler(jqueryForm)
         }
     });
 
-    $(':input', this.form).each(function()
-    {
-        this.addEventListener('invalid', function(evt)
-        {
-        }, false);    
-    });
-
     this.checkValidity = function(input)
     {
     /*
@@ -207,7 +200,7 @@ function errorHandler(jqueryForm)
     {
         if (
             value.length == 0 
-            && !('required' in input)
+            && !$(input).prop('required')
             && $(input).attr('required')
         ) {
             return false
