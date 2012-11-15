@@ -35,7 +35,9 @@ function errorHandler(jqueryForm)
     // checkValidity()
     // setCustomValidity()
     var input = document.createElement('input');
-    input.type = 'date';
+    try {
+        input.type = 'date';
+    } catch (e) {}
     this.hasDate = input.type == 'date' ? true : false;
 
     this.form.on('blur', ':input', function(evt)
@@ -130,6 +132,7 @@ function errorHandler(jqueryForm)
         var list = $('input[name="' + input.name + '"]', input.form);
 
         if (isValid == true) {
+            $(input).dialogClose();
             list.removeClass('user-error invalid');
             list.addClass('valid');
 
@@ -152,9 +155,19 @@ function errorHandler(jqueryForm)
     };
 
     // Browser does not support oninvalid polyfill it
-    this.form.on('input', ':input', function()
+    this.form.on('input keyup', ':input', function(evt)
     {
+        /* Support for browsers that don't have a oninput event
+        *  IE doesn't properly support oninput on delete / back space
+        */
+        if (evt.type == 'input') {
+            $(this).data('_input', true);
+        } else if ($(this).data('_input') == true && evt.which != 8 && evt.which != 46) {
+            return;
+        }
+
         self.checkValidity(this);
+
     });
 
     this.form.on('click', 'input[type="checkbox"], input[type="radio"]', function()
@@ -346,12 +359,16 @@ errorHandler.prototype.setValidity = function(input, message, type)
     var message = $(input).data('error-message') || message;
     $(input).data('_error_type', type);
     $(input).data('_error_message', message);
-    input.setCustomValidity(message);
+    if (input.setCustomValidity) {
+        input.setCustomValidity(message);
+    }
 }
 
 errorHandler.prototype.removeValidity = function(input)
 {
-    input.setCustomValidity(null);
+    if (input.setCustomValidity) {
+        input.setCustomValidity(null);
+    }
     $(input).removeData('_error_type');
     $(input).removeData('_error_message');
 }
