@@ -13,7 +13,9 @@
 <script src="../plugins/confirm.js"></script>
 <script src="../plugins/placeholder.js"></script>
 <script src="../plugins/errors.js"></script>
+<script src="../plugins/date.js"></script>
 <script src="../contrib/dialog/jquery.dialog.js"></script>
+<script src="../contrib/calendar/jquery.calendar.js"></script>
 <style>
 
 body {
@@ -53,6 +55,97 @@ input[pattern].user-interacted.invalid,
 input[type="email"].user-interacted.invalid,
 input[type="date"].user-interacted.invalid {
     background:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAANCAYAAACgu+4kAAABc0lEQVQoFXWSuy9EURDGf2OxiEeIRzxylRIaiXILLY1CoaARhfgbFApCJ0Gio9jEVhoSr0Kh02qpRCKIziPxPr5zudy9uzvJyTnnm5lvvplzcM5RamVhsZQvwssoYVtmYx8wu2M2WSIkhM0zJe3QLH0LFzUQdMH1JfROOPeQjPP3ogruYc4722BD22enlPh7UYt6ifYcdG/C8y5se+wAjk7g9RB6opj4XqDgFdbKoaYJvnzFO0i/QGXtr6qkijyCnFlGExlpUZQc6iBkERcYjGs2g/4ctzyCN1hNy1uvJaLAByqxQ4pCE76ybZb6vYbbH0HWbFpJA2HZn4jg1KxaWHNEILhfcmYKCCS9Xg0v+MrV/96UsJwUECOgCub3zJqjsFCBPsySgFbfe8z2M86NdugVYpg/NjWoWITZlj6JJn+m5IpwWpEHrp7g+AaG26FdrxC3z0foG3LuvOwd1iuU3Bh3/5wDDXSqVcl+sAlL1cGyx74BaleTlQ/sjBIAAAAASUVORK5CYII=) no-repeat center right;
+}
+
+#form-error-dialog {
+    padding: 10px;
+    min-width: 150px;
+}
+
+.form-date-calendar-button {
+    display: inline-block;
+    margin-left: 2px;
+    vertical-align: middle;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    background:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAD7klEQVQ4EXVUTWhcVRT+7nt3ksn81c4ksYgVO4u2xmIkYAmVLkQrDZqkSBcdoQRMN1URijtFhIJLoSJqMZsKjX/dqJBNs2h3jVA3IT8TYum0mWawSTNp5sf3d9/1nJt5ZELxDo83991zv/N93zn3Cq01/r52rUdodSr0/SMqULaUNv5vhAhpyaIfzD8hLCUsMRtq8fvBQmFdzFz64umnUnsvSxkbiWVzlpAx+I/WoAMf0G2wQtBEw0qkELoOoILWIn9H6Cn/t2q1eV4Gtdq7rueOuoCIxyVie/bCtwipQ8LujBMZG5o2K8+FsCx09eYQrK/RWgZBo06JA3gPVy2t1CnlujelW334irRtocMQAYmI7clBJlPoyHXD7ojDd5rwaw5kJgPte/CaDYhkkgC7oHQIVd9Co7ICQdq9IDwqm5VK3JJEm0h5m1WAJFvEyk6moZx/AZvcUgrCjhmmzDoMaU4WdD37PJzV+3Arq2wrmqFIyMUgibhuFSHQ4CKBuGJjo+VR9CLfzKAkZghYa0sU6tGeNCUFXGIs84WzOpNOt4BasdEWYmGRb8yGR0i2hCEn5Gf34Jhava7lwEC/zmWzTwByAAMsLy9jqbhEwAIv9PUhn8+bBNtKdkA5vrqxoWX0qUWiNWUwhV9//gUT30/g8eamSdjd04P3P/wAI6OjLdZPMrW4uixDqZ2HOgjzcwv47ptvQR2Azy9exEcXLqC2tYWvL32F4mKREnCtdvYYDOp5iy1haSyh/Zmfm8Oj9XUMHjuGt4eHcaZQwNHBQVQqFczcumWUtMczBrgomqSZSaSd3pF/kSBFbcPFSSQSULSxVCrB9+kktQ0uG7OUIdE2Bpt22Y4IydBDhw8jm8vhz5kZ3LxxAyGB/nX7NrWlhUajQScvMEkiTE17tFbEkE7HNt2ID2UicAYcP3cOP1y5gs8++RSpdApSSgNik69MYpcyAlSk2jDkirYRNElZ9junT+Ol/n48KJfR09uL6evX8dPkJHLEnHwx8iOGNCUizJCMZNntzUrHEuXyCiavXjW+MVPX81AsFtHZ2Yk+6kdmwB0SDU2doVUoZBAEPlOn5WgNltCIxTqwuLBgmrp0twSHzvXc7CxePX4cLw8MwCcPjfetXYIAqVCOPfzW8MFcd+41YiyiNmAPE4kuHDiQxyY19b1721V9/cQJvDc+jiydLEOCWbJX9FAnqDt37v4oxgpjL54dH/ty/3P735D27quaW8VxHNTrNVOQdDpD16NFUnfUMMGASr5yvzw9MXH5Y26f2NDQ0JGTb54c2bfvmUN0c8Xaw9lsczfxi/zetUafqJ5+5Z8HxampqT+mp6fn/wMOuiKBHy7p6gAAAABJRU5ErkJggg==);
+}
+
+#form-date-picker .calendar-head {
+    position: relative;
+    height: 20px;
+    margin: 5px 0;
+}
+
+#form-date-picker .calendar-months {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+#form-date-picker .calendar-years {
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+#form-date-picker .calendar-years > span,
+#form-date-picker .calendar-months > span {
+    vertical-align: middle;
+}
+
+#form-date-picker .calendar-button {
+    display: inline-block;
+    width: 15px;
+    height: 15px;
+    margin: 0 5px;
+    cursor: pointer;
+}
+
+#form-date-picker .calendar-previous-month, 
+#form-date-picker .calendar-previous-year {
+    background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAMAAAAMCGV4AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAVNQTFRF/////v7+/f79z+nUesKISqxePaZSTK1gfsSM1OzZ8fnzb71/F5UxDpAoEpIsFJMuGZYzecKI9vv3/v/+8PjyQqlXBYwhHJc1G5c0HZg2G5YzBIwfTq5iZbl2Bo0hIZk6FpQvHpg3G5Y0Ipo6BYwgc7+CvuHFE5MsIZk5CI4jgcaPS61eB40iFZQvE5MtEpMsGZUyGJUxzOjRDJAnWbNr2O3cyefPyufQyObOzejTRapZeMGHOaVPDpEpP6dU7vfw/f7+UrBkCI0jSKtcLZ9EvOHE+/37+/38+v36+Pz5UbBkCo4kOqVPDZAoTa5g9fr2VbFnZLh1Co8l0OnVw+TKxuXNxuXMxeTLzejSdsGFvODDIJk5jMuZSaxdEZIrY7h0Ipo7GpYzcL6A7/jxQKhVHZc2BIwgS61f9fv2bLx8dsCFy+fRdcCER6tbOqVQSaxc0erWWIV80gAAAAFiS0dEAIgFHUgAAAAJcEhZcwAAAEgAAABIAEbJaz4AAADhSURBVAjXHY9ZQwFhGIXPTLSIr0h9X5ghTYsayyCyDGraRbtC0l60/v+r3um5eO/Oe54DSDJGHM7RsfEJyBIgwTXp9rAp5pn2+jAD+GfnOOeCzweCIR8ARQ1HFqJCCL6oLQHLK6uxtXU9nkgmWcpIQ2GZLDZy6Xxus1BUSyiblSpqlKOztW1hx9zF3v4BcYij+jHKjeYJlRIyTnULZ+xcwcXlVat1fWNpbXRYN3bb0xJ3RMqdB/p617h/ICXqf6TY07NKdoK/RF/f3m1//yBi2v7G8P8x7fv4/Pr+cfza+/4AZl8iwnzYMUMAAAA7dEVYdGNvbW1lbnQARWRpdGVkIGJ5IFBhdWwgU2hlcm1hbiBmb3IgV1BDbGlwYXJ0LCBQdWJsaWMgRG9tYWluNM36qgAAACV0RVh0Y3JlYXRlLWRhdGUAMjAwOS0wMi0xOFQwNToyMjo1OS0wNTowMNESPJQAAAAldEVYdGRhdGU6Y3JlYXRlADIwMTItMTAtMjRUMjI6NDE6MDAtMDc6MDCk5MO3AAAAJXRFWHRkYXRlOm1vZGlmeQAyMDEyLTEwLTI0VDIyOjQxOjAwLTA3OjAw1bl7CwAAACV0RVh0bW9kaWZ5LWRhdGUAMjAwOS0wMi0xOFQwNToyMjo1OS0wNTowMI6jSqAAAAAASUVORK5CYII=);
+}
+
+#form-date-picker .calendar-next-month, 
+#form-date-picker .calendar-next-year {
+    background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAMAAAAMCGV4AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAVNQTFRF/////v7+/f791OzZfsSMTK1gPaZSSqxeesKIz+nU/v/+9vv3ecKIGZYzDpAoEpIsFJMuF5Uxb71/8fnzTq5iBIwfG5YzHZg2HJc1G5c0BYwhQqlX8Pjyc7+CBYwgIpo6G5Y0Hpg3FpQvIZk6Bo0hZbl2zOjRGJUxGZUyEpMsE5MtFZQvB40iS61egcaPCI4jIZk5E5MsvuHFeMGHRapZzejTyObOyefPyufQ2O3cWbNrDJAnSKtcCI0jUrBk/f7+7vfwP6dUDpEpOaVPOqVPCo4kUbBk+Pz5+v36+/38+/37vOHELZ9EVbFn9fr2Ta5gDZAodsGFzejSxeTLxuXMxuXNw+TK0OnVCo8lZLh1EZIrSaxdjMuZIJk5vODDcL6AGpYzIpo7Y7h09fv2S61fBIwgHZc2QKhV7/jxdsCFbLx80erWSaxcOqVQR6tbdcCEy+fRtOjeiQAAAAFiS0dEAIgFHUgAAAAJcEhZcwAAAEgAAABIAEbJaz4AAADiSURBVAjXY2BgZGJgZmFlY+fgZGBiZGDgYuDm4eXjF+DnExQSZgAKcIuIiolLSEpISEhJyzAwMMjKyUtISkoqKCopq6gyMKipa/Brampp6+jq6RsYGjEYq5iYmplbqJlbMlhZ86sy2NjaMdgDtQEJB0cnZwYXVzcGdw8g8PRi8HbyYbDR8WVgAskzMvj5BzgzBMrZBAWHhISGhTOoRvBHMlgIakQBgZZcdIx+LH8cA0M80H4gSEhUj9VJAupLTklVSAO6T1JCJT0DbEymOsj9TkpZMiD3A/2XzZGTm5dfAPIfAF8dIrdrOEgyAAAAO3RFWHRjb21tZW50AEVkaXRlZCBieSBQYXVsIFNoZXJtYW4gZm9yIFdQQ2xpcGFydCwgUHVibGljIERvbWFpbjTN+qoAAAAldEVYdGNyZWF0ZS1kYXRlADIwMDktMDItMThUMDU6MjI6NTktMDU6MDDREjyUAAAAJXRFWHRkYXRlOmNyZWF0ZQAyMDEyLTEwLTI0VDIyOjQxOjAwLTA3OjAwpOTDtwAAACV0RVh0ZGF0ZTptb2RpZnkAMjAxMi0xMC0yNFQyMjo0MTowMC0wNzowMNW5ewsAAAAldEVYdG1vZGlmeS1kYXRlADIwMDktMDItMThUMDU6MjI6NTktMDU6MDCOo0qgAAAAAElFTkSuQmCC);
+}
+
+#form-date-picker .calendar-table {
+    border-collapse: collapse;
+}
+
+#form-date-picker .calendar-table thead td {
+    font-weight: bold;
+    text-align: center;
+    width: 25px;
+    border-bottom: solid 1px #999999;
+}
+
+#form-date-picker .calendar-table tbody td {
+    vertical-align: middle;
+    text-align: center;
+    
+    width: 25px;
+    height: 25px;
+    border: solid 1px #999999;
+    cursor: pointer;
+    transition: background-color .4s linear;
+} 
+
+#form-date-picker .calendar-table tbody td:hover {
+    background-color: #cccccc;
+}
+
+#form-date-picker .calendar-table tbody td.calendar-today {
+    background-color: orange;
+}
+
+#form-date-picker .calendar-day-previous,
+#form-date-picker .calendar-day-next {
+    color: #cccccc;
 }
 
 </style>

@@ -44,8 +44,9 @@ function errorHandler(jqueryForm)
     {
         $(this).data('userInteraction', true).addClass('user-interacted');
         self.validate(this);
-
-        $(this).dialogClose();
+        if ($(this).hasDialog('#form-error-dialog')) {
+            $(this).dialogClose();
+        }
     })
     .on('focus', ':input', function()
     {
@@ -125,7 +126,9 @@ function errorHandler(jqueryForm)
         var list = $('input[name="' + input.name + '"]', input.form);
 
         if (isValid == true) {
-            $(input).dialogClose();
+            if ($(input).hasDialog('#form-error-dialog')) {
+                $(input).dialogClose();
+            }
             list.removeClass('user-error invalid');
             list.addClass('valid');
 
@@ -255,7 +258,7 @@ function errorHandler(jqueryForm)
             value.length 
             && $(input).prop('type') == 'text'
             && $(input).attr('type') == 'date'
-            && !value.match(/^[0-9]{4}-[0-1][0-9]-[0-1][0-9]$/)
+            && !value.match(/^[0-9]{4}-[0-1][0-9]-[0-3][0-9]$/)
         ) {
             return false
         } else {
@@ -370,7 +373,7 @@ errorHandler.prototype.errorMessage = function(input)
 {
     var input = $(input);
     if (jQuery.fn.dialogOpen) {
-        $(input).dialogOpen(input.data('_error_message'), {'stem' : true});
+        $(input).dialogOpen(input.data('_error_message'), {'stem' : true, 'id' : 'form-error-dialog'});
     } else {
     }    
 

@@ -4,3 +4,6 @@
 [submodule "contrib/dialog"]
 	path = contrib/dialog
 	url = https://github.com/ken-spencer/jquery-dialog.git
+[submodule "contrib/calendar"]
+	path = contrib/calendar
+	url = https://github.com/ken-spencer/jquery-calendar.git
