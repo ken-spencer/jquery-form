@@ -90,16 +90,27 @@ function errorHandler(jqueryForm)
         var isValid = true;
         var type = 'unknown';
 
+        var hasValidity = false;
         for (var i = 0, validity; validity = this._validities[i]; i++) {
-            if (validity.callback.call(this, input, value)) {
+            var valid = validity.callback.call(this, input, value);
+
+            hasValidity |= valid !== null;
+
+            if (valid === true) {
                 this.removeValidity(input);
-            } else {
+            } else if (valid === false){
                 this.setValidity(input, validity.message, validity.name);
                 isValid = false;
                 break;
             }
         }
     
+        if (hasValidity) {
+            $(input).addClass('has-validity');        
+        } else {
+            return;
+        }
+
         if (isValid == true && input.checkValidity && input.checkValidity() == false) {
             isValid = false;
             var validity = input.validity;
@@ -201,11 +212,11 @@ function errorHandler(jqueryForm)
     // Required Error for older browsers
     this.addCustomValidity('required', function(input, value)
     {
-        if (
-            value.length == 0 
-            && !$(input).prop('required')
-            && $(input).attr('required')
-        ) {
+        if (!$(input).attr('required')) {
+            return null;
+        }
+
+        if (value.length == 0 && !$(input).prop('required')) {
             return false
         } else {
             return true;
@@ -216,10 +227,13 @@ function errorHandler(jqueryForm)
     // Email Matching for browsers that don't support it
     this.addCustomValidity('email', function(input, value)
     {
+        if ($(input).attr('type') != 'email') {
+            return null;
+        }
+
         if (
             value.length 
             && $(input).prop('type') == 'text'
-            && $(input).attr('type') == 'email'
             && !value.match(/.+@.+\..+/)
         ) {
             return false
@@ -232,17 +246,17 @@ function errorHandler(jqueryForm)
     // Pattern Matching for browsers that don't support it
     this.addCustomValidity('pattern', function(input, value)
     {
+        var pattern = $(input).attr('pattern');
+
+        if (!pattern) {
+            return null;
+        }
+
         if (input.value.length == 0) {
             return true;
         }
 
-        var pattern = $(input).attr('pattern');
-
-        if (
-            pattern
-            && !$(input).prop('pattern')
-            && !input.value.match(new RegExp(pattern))
-        ) {
+        if (!$(input).prop('pattern') && !input.value.match(new RegExp(pattern))) {
             return false
         } else {
             return true;
@@ -250,14 +264,39 @@ function errorHandler(jqueryForm)
 
     }, messages.pattern);
 
+    // Value must match value of a different field
+    this.addCustomValidity('match', function(input, value)
+    {
+        var id, field;
+        if (!(id = $(input).data('error-match'))) {
+            return null;
+        }
+        
+        field = $('#' + id);
+
+        if (field.length == 0) {
+            return null;
+        }
+
+        if ($(input).val() != field.val()) {
+            return false
+        } else {
+            return true;
+        }
+
+    }, "Field value does not match");
+
 
     // Date Matching for browsers that don't support it
     this.addCustomValidity('date', function(input, value)
     {
+        if ($(input).attr('type') != 'date') {
+            return null;
+        }
+
         if (
             value.length 
             && $(input).prop('type') == 'text'
-            && $(input).attr('type') == 'date'
             && !value.match(/^[0-9]{4}-[0-1][0-9]-[0-3][0-9]$/)
         ) {
             return false
