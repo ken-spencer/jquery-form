@@ -108,9 +108,7 @@ function errorHandler(jqueryForm)
     
         if (hasValidity) {
             $(input).addClass('has-validity');        
-        } else {
-            return;
-        }
+        } 
 
         if (isValid == true && input.checkValidity && input.checkValidity() == false) {
             isValid = false;
@@ -355,11 +353,11 @@ function errorHandler(jqueryForm)
     this.form.each(function()
     {
         var buttons = $('button[type="submit"]:not([form]), button[type=""]:not([form]), button:not([type]):not([form]), input[type="submit"]:not([form]), input[type="image"]', this);
+        var id = $(this).attr('id');
 
-        if (this.id) {
-            buttons = $('button[form="' + this.id + '"][type="submit"]:not(form[id!="' + this.id + '"] button)').add(buttons);
+        if (id) {
+            buttons = $('button[form="' + id + '"][type="submit"]').add(buttons);
         } 
-
         buttons.on('click', submit);
    });
 
