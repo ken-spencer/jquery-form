@@ -80,10 +80,11 @@ function errorHandler(jqueryForm)
 
         */
 
+    /*
         if (!input.name) {
             return true;
         }
-
+    */
 
         var value = this.getValue(input);
 
@@ -134,7 +135,11 @@ function errorHandler(jqueryForm)
         }
 
         // to handle fileds linke radio buttons that have multiple inputs with same name
-        var list = $('input[name="' + input.name + '"]', input.form);
+        if (input.name) {
+            var list = $('input[name="' + input.name + '"]', input.form);
+        } else {
+            var list = $(input);
+        }
 
         if (isValid == true) {
             if ($(input).hasDialog('#form-error-dialog')) {
@@ -267,7 +272,14 @@ function errorHandler(jqueryForm)
     // Value must match value of a different field
     this.addCustomValidity('match', function(input, value)
     {
-        var id, field;
+        var id, field, inverse;
+
+        /* Check match on inverse field
+        */
+        if (inverse = $(input).data('matched_by')) {
+            this.checkValidity(inverse);
+        }
+
         if (!(id = $(input).data('error-match'))) {
             return null;
         }
@@ -277,6 +289,8 @@ function errorHandler(jqueryForm)
         if (field.length == 0) {
             return null;
         }
+
+        field.data('matched_by', input);
 
         if ($(input).val() != field.val()) {
             return false
@@ -422,7 +436,11 @@ errorHandler.prototype.getValue = function(input)
 {
     var type = input.type;
     
-    var query = $('input[name="' + input.name + '"]', input.form);
+    if (input.name) {
+        var query = $('input[name="' + input.name + '"]', input.form);
+    } else {
+        var query = $(input);
+    }
 
     var value = '';
     switch (type) {
