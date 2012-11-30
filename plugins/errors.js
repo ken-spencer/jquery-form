@@ -424,7 +424,7 @@ errorHandler.prototype.errorMessage = function(input)
 {
     var input = $(input);
     if (jQuery.fn.dialogOpen) {
-        $(input).dialogOpen(input.data('_error_message'), {'stem' : true, 'id' : 'form-error-dialog'});
+        $(input).dialogOpen("<span>" + input.data('_error_message') + "</span>", {'stem' : true, 'id' : 'form-error-dialog'});
     } else {
     }    
 

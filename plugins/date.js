@@ -30,36 +30,38 @@ jqueryForm.addEnhancement(function()
             return;
         }
 
-
         button.dialogOpen('', {
             'stem' : true,
             'position' : 'right-top',
             'id' : 'form-date-picker'
-        });
-        
-        var calendar = new jqueryCalendar("#form-date-picker");
-        calendar.append();        
-
-        calendar.node.on('click', 'tbody td', function()
+        }).afterOpen(function(body)
         {
-            var oldValue = input.prop('value');
+            var calendar = new jqueryCalendar(body);
+            calendar.append();        
 
-            var date = new Date($(this).data('date'))
-            var year  = date.getFullYear();
-            var month = date.getMonth() + 1;
-            var day   = date.getDate();
+            calendar.node.on('click', 'tbody td', function()
+            {
+                var oldValue = input.prop('value');
 
-            var iso =  year + '-' + (month <= 9 ? '0' : '' ) + month 
-            iso += '-' + (day <= 9 ? '0' : '') + day;
+                var date = new Date($(this).data('date'))
+                var year  = date.getFullYear();
+                var month = date.getMonth() + 1;
+                var day   = date.getDate();
 
-            if (iso != oldValue) {
-                input.prop('value', iso);
-                input.trigger('input');
-                input.trigger('change');
-            }
-            input.focus().select();
+                var iso =  year + '-' + (month <= 9 ? '0' : '' ) + month 
+                iso += '-' + (day <= 9 ? '0' : '') + day;
 
-            button.dialogClose();
+                if (iso != oldValue) {
+                    input.prop('value', iso);
+                    input.trigger('input');
+                    input.trigger('change');
+                }
+                input.focus().select();
+
+                button.dialogClose();
+            });
+
         });
+
     });
 });
