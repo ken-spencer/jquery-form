@@ -134,7 +134,7 @@ function errorHandler(jqueryForm)
 
         // to handle fileds linke radio buttons that have multiple inputs with same name
         if (input.name) {
-            var list = $('input[name="' + input.name + '"]', input.form);
+            var list = $(':input[name="' + input.name + '"]', input.form);
         } else {
             var list = $(input);
         }
@@ -165,7 +165,7 @@ function errorHandler(jqueryForm)
     };
 
     // Browser does not support oninvalid polyfill it
-    this.form.on('input keyup', ':input', function(evt)
+    this.form.on('input keyup click', ':input', function(evt)
     {
         /* Support for browsers that don't have a oninput event
         *  IE doesn't properly support oninput on delete / back space
