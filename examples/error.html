@@ -4,9 +4,6 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>Form Example</title>
 
-<link rel="stylesheet" type="text/css" href="../contrib/dialog/dialog.css" />
-
-
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
 <script src="../jquery.form.js"></script>
 <script src="../plugins/modified.js"></script>
@@ -20,6 +17,18 @@
 
 body {
     font: normal 11px sans-serif;
+}
+
+.dialog {
+    display: none;
+    position: absolute;
+    border: solid 1px #999999;
+    border-radius: 5px;
+    min-width: 100px;
+    ming-height: 20px;
+    background-color: white;
+    box-shadow: 5px 5px 10px rgba(0,0,0,0.5);
+    margin: 0 5px;
 }
 
 .field + .field {

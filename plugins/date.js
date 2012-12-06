@@ -30,8 +30,9 @@ jqueryForm.addEnhancement(function()
             return;
         }
 
+        var offset = button.height() / 2;
         button.dialogOpen('', {
-            'stem' : true,
+            'stem' : [offset - 5, 5, 5, 10],
             'position' : 'right-top',
             'id' : 'form-date-picker'
         }).afterOpen(function(body)
