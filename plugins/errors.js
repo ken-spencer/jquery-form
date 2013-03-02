@@ -464,3 +464,40 @@ errorHandler.prototype.getValue = function(input)
 input.validationMessage - get the browser default validation message lame in Safari
 
 */
+
+jQuery.fn.checkValidity = function(trigger, focus)
+{
+    var node = this.first();
+    var form = node.prop('nodeName') == 'FORM' ? node : node.closest('form');
+
+    var self = form.data('jqueryForm');
+
+    if (!self) {
+        return null;
+    }
+
+
+
+    var handler = self.errorHandler;
+    if (node.prop('nodeName') == 'FORM') {
+        var retval = handler.validate()
+        if (retval == false && trigger) {
+            $(":input", form).addClass('user-interacted');
+            var input = $('.invalid', form).first();
+            if (focus) {
+                input.focus();
+            }
+        }
+    } else {
+        var retval = handler.checkValidity(node[0]);
+        if (retval == false && trigger) {
+            node.addClass('user-interacted');
+            if (focus) {
+                node.focus();
+            }
+        }
+    }
+
+
+    return retval;    
+}

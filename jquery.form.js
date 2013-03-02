@@ -1,6 +1,7 @@
 var jqueryForm = function(selector)
 {
     this.form = $(selector).first();
+    this.form.data('jqueryForm', this);
 
     this.enhance  = function()
     {
