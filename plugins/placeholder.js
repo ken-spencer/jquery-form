@@ -2,11 +2,15 @@
 */
 jqueryForm.addEnhancement(function()
 {
+    var input = document.createElement('input');
+    if (typeof(input.placeholder) != 'undefined') {
+        return false;
+    }
+
     this.form.find(":input[placeholder]").each(function()
     {
-        
-        if (typeof(this.placeholder) != 'undefined') {
-            return false;
+        if ($(this).attr('placeholder').length == 0) {
+            return;
         }
 
         var field = this;
