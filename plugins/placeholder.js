@@ -23,6 +23,7 @@ jqueryForm.addEnhancement(function()
         node.removeClass('selected');
         node.removeAttr('name');
         node.removeAttr('id');
+        node.attr('novalidate', true);
 
         node.removeAttr('placeholder');
         node.addClass('placeholder');

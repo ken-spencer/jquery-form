@@ -86,6 +86,10 @@ function errorHandler(jqueryForm)
         }
     */
 
+        if ($(input).attr('novalidate')) {
+            return true;        
+        }
+            
         var value = this.getValue(input);
 
         var isValid = true;
@@ -191,7 +195,7 @@ function errorHandler(jqueryForm)
     var supportsValidity = function()
     {
         var supported = false;
-        var form = $('<form style="display: none;"><input required="required"/><button type="submit"></form>').appendTo(document.body);
+        var form = $('<form id="fake-form" style="display: none;"><input required="required"/><button type="submit"></form>').appendTo(document.body);
 
         $('input', form).on('invalid', function(evt)
         {
@@ -219,7 +223,8 @@ function errorHandler(jqueryForm)
             return null;
         }
 
-        if (value.length == 0 && !$(input).prop('required')) {
+        var test = document.createElement(input.nodeName);
+        if (value.length == 0 && typeof(test.required) == "undefined") {
             return false
         } else {
             return true;
@@ -259,7 +264,8 @@ function errorHandler(jqueryForm)
             return true;
         }
 
-        if (!$(input).prop('pattern') && !input.value.match(new RegExp(pattern))) {
+        var test = document.createElement(input.nodeName);
+        if (typeof(test.pattern) == "undefined" && !input.value.match(new RegExp(pattern))) {
             return false
         } else {
             return true;
@@ -317,49 +323,6 @@ function errorHandler(jqueryForm)
         }
     }, messages.date);
 
-
-    var submit = function(evt)
-    {
-        self.submitPressed = true;
-
-        if (self.validate()) {
-            return true;
-        }
-
-        var form;
-        
-        if (this.form) {
-            form = this.form;
-        } else if ($(this).attr('form')) {
-            form = $('#' + $(this).attr('form'))[0];
-        }
-            
-        if (!form) {
-            return;
-        }
-
-        $(":input", form).addClass('user-interacted');
-
-        var input = $('.invalid', form).first();
-        input.focus();
-
-        evt.preventDefault();    
-    };
-
-
-    /* Search for any button which might submit the form
-     * we would like to detect if they are pressed so we can substitute our own form validation
-    */
-    this.form.each(function()
-    {
-        var buttons = $('button[type="submit"]:not([form]), button[type=""]:not([form]), button:not([type]):not([form]), input[type="submit"]:not([form]), input[type="image"]', this);
-        var id = $(this).attr('id');
-
-        if (id) {
-            buttons = $('button[form="' + id + '"][type="submit"]').add(buttons);
-        } 
-        buttons.on('click', submit);
-   });
 
     this.validate();
 
@@ -435,7 +398,7 @@ errorHandler.prototype.getValue = function(input)
     var type = input.type;
     
     if (input.name) {
-        var query = $('input[name="' + input.name + '"]', input.form);
+        var query = $(':input[name="' + input.name + '"]', input.form);
     } else {
         var query = $(input);
     }
@@ -447,15 +410,20 @@ errorHandler.prototype.getValue = function(input)
         // last() only applies to checkboxes
         value = query.filter(':checked').last().val();
         break;
+    case 'select-one': 
+    case 'select-multiple':
     default:
+        value = query.last().val();
+    /*
         value = query.filter(function()
         {
-            return this.value.length ? true : false;
-        }).last().val();
+            return $this.value.length ? true : false;
+        })
+    */
 
         break;        
     }
-  
+
     return typeof(value) == 'undefined' ? '' : value;      
 }
 
@@ -475,8 +443,6 @@ jQuery.fn.checkValidity = function(trigger, focus)
     if (!self) {
         return null;
     }
-
-
 
     var handler = self.errorHandler;
     if (node.prop('nodeName') == 'FORM') {
@@ -501,3 +467,53 @@ jQuery.fn.checkValidity = function(trigger, focus)
 
     return retval;    
 }
+
+
+/* Detect button press and submit form
+*/
+//$(document).on("click", 'button[type="submit"]:not([form]), button[type=""]:not([form]), button:not([type]):not([form]), input[type="submit"]:not([form]), input[type="image"]', function(evt)
+$(document).on("click", 'button, input[type="image"], input[type="image"]', function(evt)
+{
+    var self;
+    var form;
+    var button = $(this);
+    if (button.attr('form')) {
+        form = $("#" + $(button).attr('form'));
+    } else {
+        form = button.closest('form');
+    }
+
+    if (!form.length || !(self = form.data('jqueryForm'))) {
+        return;
+    }
+
+    var handler = self.errorHandler;
+
+    handler.submitPressed = true;
+
+    if (button.attr('novalidate') || button.prop('noValidate')) {
+        return true;
+    }
+
+    if (handler.validate()) {
+        form.data('submitting-form', true);
+        var input = document.createElement('button');
+        if (button.attr("formaction") && typeof(input.formaction) == "undefined") {
+            // Polyfill formaction attribute
+            form.prop("action", button.attr("formaction"));
+        }
+
+        if (button.attr('form') &&  button.prop('form') != form[0]) {
+            form.submit();
+        }
+
+        return true;
+    }
+
+    $(":input", form).addClass('user-interacted');
+    var first = $('.invalid', form).first();
+    first.focus();
+
+    evt.preventDefault();    
+});
+

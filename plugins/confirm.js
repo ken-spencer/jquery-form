@@ -5,17 +5,16 @@
 jqueryForm.fn.setConfirm = function(message)
 {
     var self = this;
-    var submit = false;
 
     this.form.on('submit', function()
     {
-            submit = true;
+        self.form.data('submitting-form', true);
     });
 
     $(window).on('beforeunload', function()
     {
-        if (submit == true) {
-            return;
+        if (self.form.data('submitting-form') == true) {
+            return;        
         }
 
         if (self.hasModified()) {
