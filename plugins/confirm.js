@@ -17,7 +17,7 @@ jqueryForm.fn.setConfirm = function(message)
             return;        
         }
 
-        if (self.hasModified()) {
+        if (self.form.hasModified()) {
             return message || "Leave without saving?";
         }
     });    

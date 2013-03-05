@@ -1,47 +1,56 @@
 /* A plugin for detecting which form fields have been modified
 */
 
-(function()
+(function($)
 {
     /* Returns the form fields which have been modified 
     */
-    jqueryForm.fn.modified = function() 
+    $.fn.modified = function() 
     {
-
-        return $(':input', this.form).filter(function()
+        return this.find(':input').addBack().filter(":input").filter(function()
         {           
-            var element = this;
+            var element = $(this);
 
-            if (!element.name) {
+            if (!element.prop('name')) {
                 return false;
             }
 
-            if (element.options && _check_options(element)) {
-                return true;
-            } else if (
-                typeof(element.defaultChecked) != 'undefined' 
-                && element.defaultChecked != element.checked
-            ) {
-                return true;
-            } else if (
-                typeof(element.defaultValue) != 'undefined'
-                && element.defaultValue.replace(/\r|\n/g, '') != element.value.replace(/\r|\n/g, '')
-            ) {
-                return true;
+            switch(element.prop('type')) {
+            case 'select-one':
+            case 'select-multiple':
+                return checkOptions(this)                
+                break;
+            case 'checkbox':
+            case 'radio':
+                return this.defaultChecked != this.checked;
+                break;
+            case 'textarea':
+                // CKEditor Support
+                if (this.id && typeof(CKEDITOR) != "undefined" && typeof(CKEDITOR.instances[this.id]) != "undefined") {
+                    return CKEDITOR.instances[this.id].checkDirty();
+                }
+            default:
+                if (
+                    typeof(this.defaultValue) != 'undefined'
+                    && this.defaultValue.replace(/\r|\n/g, '') != element.val().replace(/\r|\n/g, '')
+                ) {
+                    return true;
+                }
+                break;
             }
         });
     }
 
     /* Return true if form has modified fields
     */
-    jqueryForm.fn.hasModified = function() 
+    $.fn.hasModified = function() 
     {
-        var modified = this.modified();
+        var modified = $(this).modified();
 
         return modified.length > 0 ? true : false;
     }
 
-    var _check_options = function(element)
+    var checkOptions = function(element)
     {
         if (element.options.length == 0) {
             return;
@@ -70,5 +79,5 @@
         }
     }
 
-})();
+})(jQuery);
 
