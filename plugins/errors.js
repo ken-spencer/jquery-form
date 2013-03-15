@@ -456,7 +456,7 @@ jQuery.fn.checkValidity = function(trigger, focus)
     var self = form.data('jqueryForm');
 
     if (!self) {
-        return null;
+        return true;
     }
 
     var handler = self.errorHandler;
