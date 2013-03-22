@@ -1,3 +1,15 @@
+(function($)
+{
+    $.fn.formEnhance = function()
+    {
+        return this.each(function()
+        {
+            var form = new jqueryForm(this);
+            form.enhance();                
+        });
+    };
+})(jQuery);
+
 var jqueryForm = function(selector)
 {
     this.form = $(selector).first();
@@ -36,5 +48,4 @@ jqueryForm.addEnhancement = function(enhancement)
 {
     jqueryForm.enhancements.push(enhancement);
 }
-
 
