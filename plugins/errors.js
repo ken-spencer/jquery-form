@@ -98,6 +98,64 @@ function errorHandler(jqueryForm)
 
     }, this.messages.required);
 
+    // min
+    this.addCustomValidity('min', function(input, value, validity)
+    {
+        var min = $(input).attr('min');
+        if ($(input).attr('type') != "number") {
+            return null;
+        }
+
+        if (!min && min != "0") {
+            return null;
+        }
+
+        min = parseFloat(min);
+
+    /*  // Deed to find a test that works in FF. 
+        var test = document.createElement(input.nodeName);
+        if (typeof(test.min) != "undefined") {
+            return true;
+        }
+    */
+
+        value = parseFloat(value);
+
+        if (value >= min) { 
+            return true;
+        } else {
+            validity.message = validity.message.replace("%s", min);
+            return false
+        }
+
+    }, "This field cannot be above %s in value");
+
+    // max
+    this.addCustomValidity('max', function(input, value, validity)
+    {
+        var max = $(input).attr('max');
+        if ($(input).attr('type') != "number") {
+            return null;
+        }
+
+        if (!max && max != "0") {
+            return null;
+        }
+
+        max = parseFloat(max);
+
+        value = parseFloat(value);
+
+        if (value <= max) { 
+            return true;
+        } else {
+            validity.message = validity.message.replace("%s", max);
+            return false
+        }
+
+    }, "This field cannot be below %s in value");
+
+
     // Email Matching for browsers that don't support it
     this.addCustomValidity('email', function(input, value)
     {
@@ -264,7 +322,7 @@ errorHandler.prototype.checkValidity = function(input)
 
     var hasValidity = false;
     for (var i = 0, validity; validity = this._validities[i]; i++) {
-        var valid = validity.callback.call(this, input, value);
+        var valid = validity.callback.call(this, input, value, validity);
 
         hasValidity |= valid !== null;
 
