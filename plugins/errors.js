@@ -128,7 +128,7 @@ function errorHandler(jqueryForm)
             return false
         }
 
-    }, "This field cannot be above %s in value");
+    }, "This field cannot be below %s in value");
 
     // max
     this.addCustomValidity('max', function(input, value, validity)
