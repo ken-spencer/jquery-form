@@ -119,6 +119,10 @@ function errorHandler(jqueryForm)
         }
     */
 
+        if (value.length == 0) {
+            return true;
+        }
+
         value = parseFloat(value);
 
         if (value >= min) { 
@@ -143,6 +147,10 @@ function errorHandler(jqueryForm)
         }
 
         max = parseFloat(max);
+
+        if (value.length == 0) {
+            return true;
+        }
 
         value = parseFloat(value);
 
