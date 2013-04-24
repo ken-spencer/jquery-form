@@ -563,6 +563,10 @@ $(document).on("click", 'button, input[type="image"], input[type="image"]', func
         form = button.closest('form');
     }
 
+    if (this.type && this.type != "submit") {
+        return;
+    }
+
     if (!form.length || !(self = form.data('jqueryForm'))) {
         return;
     }
