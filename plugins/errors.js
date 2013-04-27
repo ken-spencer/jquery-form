@@ -132,7 +132,7 @@ function errorHandler(jqueryForm)
             return false
         }
 
-    }, "This field cannot be below %s in value");
+    }, "This field cannot be above %s in value");
 
     // max
     this.addCustomValidity('max', function(input, value, validity)
@@ -380,8 +380,8 @@ errorHandler.prototype.checkValidity = function(input)
         if ($(input).hasDialog('#form-error-dialog')) {
             $(input).dialogClose();
         }
-    list.removeClass('user-error invalid');
-    list.addClass('valid');
+        list.removeClass('user-error invalid');
+        list.addClass('valid');
 
         return true;
     } else {
@@ -529,7 +529,7 @@ jQuery.fn.checkValidity = function(trigger, focus)
     if (node.prop('nodeName') == 'FORM') {
         var retval = handler.validate()
         if (retval == false && trigger) {
-            $(":input", form).addClass('user-interacted');
+            $(":input.invalid", form).addClass('user-error');
             var input = $('.invalid', form).first();
             if (focus) {
                 input.focus();
@@ -538,7 +538,7 @@ jQuery.fn.checkValidity = function(trigger, focus)
     } else {
         var retval = handler.checkValidity(node[0]);
         if (retval == false && trigger) {
-            node.addClass('user-interacted');
+            node.addClass('user-error');
             if (focus) {
                 node.focus();
             }
@@ -594,10 +594,7 @@ $(document).on("click", 'button, input[type="image"], input[type="image"]', func
         return true;
     }
 
-    $(":input", form).addClass('user-interacted');
-    var first = $('.invalid', form).first();
-    first.focus();
-
+    $(":input.invalid", form).addClass('user-error').first().focus();
     evt.preventDefault();    
 });
 
