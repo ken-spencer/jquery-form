@@ -132,7 +132,7 @@ function errorHandler(jqueryForm)
             return false
         }
 
-    }, "This field cannot be above %s in value");
+    }, "This field must be above %s in value");
 
     // max
     this.addCustomValidity('max', function(input, value, validity)
@@ -161,7 +161,7 @@ function errorHandler(jqueryForm)
             return false
         }
 
-    }, "This field cannot be below %s in value");
+    }, "This field must be below %s in value");
 
 
     // Email Matching for browsers that don't support it
