@@ -37,7 +37,13 @@ jqueryForm.addEnhancement(function()
             'id' : 'form-date-picker'
         }).afterOpen(function(body)
         {
-            var calendar = new jqueryCalendar(body);
+            var opt = input.data("calendar");
+            
+            if (typeof(opt) != "object") {
+                opt = {};
+            }
+
+            var calendar = new jqueryCalendar(body, opt);
             calendar.append();        
 
             calendar.node.on('click', 'tbody td', function()
