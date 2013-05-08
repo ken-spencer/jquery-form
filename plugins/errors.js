@@ -287,9 +287,21 @@ errorHandler.prototype.supportsValidity = function()
 
 errorHandler.prototype.checkValidity = function(input)
 {
-    if (this.form.prop('noValidate') || this.form.attr('novalidate')) {
-        return;
+    if (
+        this.form.prop('noValidate') 
+        || this.form.attr('novalidate')
+        || $(input).attr('novalidate')
+        || $(input).prop('noValidate')
+        || $(input).prop('disabled')
+        || $(input).prop('disabled')
+        || $(input).closest("fieldset").prop('disabled')
+        || $(input).closest("fieldset").prop('disabled')
+    ) {
+        return true;
     }
+
+
+    
 
 /*
     // Has Native Support
@@ -319,10 +331,7 @@ errorHandler.prototype.checkValidity = function(input)
     }
 */
 
-    if ($(input).attr('novalidate')) {
-        return true;        
-    }
-            
+           
     var value = this.getValue(input);
 
     var isValid = true;
