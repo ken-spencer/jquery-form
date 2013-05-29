@@ -89,8 +89,7 @@ function errorHandler(jqueryForm)
             return null;
         }
 
-        var test = document.createElement(input.nodeName);
-        if (value.length == 0 && typeof(test.required) == "undefined") {
+        if (value.length == 0) {
             return false
         } else {
             return true;
@@ -173,7 +172,6 @@ function errorHandler(jqueryForm)
 
         if (
             value.length 
-            && $(input).prop('type') == 'text'
             && !value.match(/.+@.+\..+/)
         ) {
             return false
@@ -196,8 +194,7 @@ function errorHandler(jqueryForm)
             return true;
         }
 
-        var test = document.createElement(input.nodeName);
-        if (typeof(test.pattern) == "undefined" && !input.value.match(new RegExp(pattern))) {
+        if (!input.value.match(new RegExp(pattern))) {
             return false
         } else {
             return true;
@@ -246,7 +243,6 @@ function errorHandler(jqueryForm)
 
         if (
             value.length 
-            && $(input).prop('type') == 'text'
             && !value.match(/^[0-9]{4}-[0-1][0-9]-[0-3][0-9]$/)
         ) {
             return false
@@ -356,6 +352,7 @@ errorHandler.prototype.checkValidity = function(input)
         $(input).addClass('has-validity');        
     } 
 
+/*
     if (isValid == true && input.checkValidity && input.checkValidity() == false) {
         isValid = false;
         var validity = input.validity;
@@ -377,6 +374,7 @@ errorHandler.prototype.checkValidity = function(input)
         $(input).data('_error_type', type);
         $(input).data('_error_message', message);
     }
+*/
 
     // to handle fileds linke radio buttons that have multiple inputs with same name
     if (input.name) {
@@ -455,16 +453,21 @@ errorHandler.prototype.setValidity = function(input, message, type)
     var message = $(input).data('error-message') || message;
     $(input).data('_error_type', type);
     $(input).data('_error_message', message);
+/*
     if (input.setCustomValidity) {
         input.setCustomValidity(message);
     }
+*/
 }
 
 errorHandler.prototype.removeValidity = function(input)
 {
+/*
     if (input.setCustomValidity) {
         input.setCustomValidity(null);
     }
+*/
+
     $(input).removeData('_error_type');
     $(input).removeData('_error_message');
 }
