@@ -45,14 +45,14 @@ function errorHandler(jqueryForm)
     this.form.on('blur', ':input', function(evt)
     {
         $(this).data('userInteraction', true).addClass('user-interacted');
-        self.validate(this);
+        self.checkValidity(this);
         if ($(this).hasDialog('#form-error-dialog')) {
             $(this).dialogClose();
         }
     })
     .on('focus', ':input', function()
     {
-        self.validate(this);
+        self.checkValidity(this);
         if ($(this).hasClass('user-error')) {
             self.errorMessage(this);
         }
@@ -65,20 +65,19 @@ function errorHandler(jqueryForm)
         /* Support for browsers that don't have a oninput event
         *  IE doesn't properly support oninput on delete / back space
         */
-        if (evt.type == 'input') {
-            $(this).data('_input', true);
-        } else if ($(this).data('_input') == true && evt.which != 8 && evt.which != 46) {
+        if (evt.type == 'keyup'  && (evt.which != 8  && evt.which != 46)) {
             return;
         }
 
         self.checkValidity(this);
-
     });
 
+/*
     this.form.on('click', 'input[type="checkbox"], input[type="radio"]', function()
     {
         self.checkValidity(this);
     });
+*/
 
     this.hasOnInvalid = this.supportsValidity();
 
