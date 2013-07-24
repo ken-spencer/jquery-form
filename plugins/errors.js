@@ -274,7 +274,13 @@ errorHandler.prototype.supportsValidity = function()
         evt.preventDefault();
     });
 
-    $('button', form).trigger('click');
+    $('button', form)
+    .on("click", function(evt)
+    {
+        evt.stopPropagation();
+    })
+    .trigger('click');
+
     form.remove();
 
     return supported;
