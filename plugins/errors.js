@@ -171,7 +171,7 @@ function errorHandler(jqueryForm)
 
         if (
             value.length 
-            && !value.match(/.+@.+\..+/)
+            && !value.match(/^[A-Z0-9._%+-]+@[A-Z0-9.-]{1,63}\.[A-Z]{2,10}$/i)
         ) {
             return false
         } else {
