@@ -296,7 +296,6 @@ errorHandler.prototype.checkValidity = function(input)
         || $(input).prop('disabled')
         || $(input).prop('disabled')
         || $(input).closest("fieldset").prop('disabled')
-        || $(input).closest("fieldset").prop('disabled')
     ) {
         return true;
     }
@@ -398,9 +397,16 @@ errorHandler.prototype.checkValidity = function(input)
         return true;
     } else {
         // Manually Trigger oninvalid event for browsers that don't support it
-        if (false == self.hasOnInvalid) {
-            list.trigger('invalid');
-        }
+
+     //   if (false == self.hasOnInvalid) {
+            var event = jQuery.Event("invalid");
+            list.trigger(event);
+            if (event.isDefaultPrevented()) {
+                list.removeClass('user-error invalid');
+                list.addClass('valid');
+                return true;
+            }
+     //   }
 
         list.removeClass('valid');
         list.addClass('invalid');
