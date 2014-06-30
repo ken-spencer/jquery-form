@@ -617,7 +617,14 @@ $(document).on("click", 'button, input[type="image"], input[type="image"]', func
         return true;
     }
 
-    $(":input.invalid", form).addClass('user-error').first().focus();
+    var first = $(":input.invalid", form).addClass('user-error').first();
+
+    if (first.is(':hidden')) {
+        first.trigger('hidden-error-focus');
+    } else {
+        first.focus();
+    }
+
     evt.preventDefault();    
 });
 
