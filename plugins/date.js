@@ -1,5 +1,6 @@
 jqueryForm.addEnhancement(function()
 {
+
     if (!window.jqueryCalendar || !window.jqueryDialog) {
         return;
     }
@@ -15,11 +16,17 @@ jqueryForm.addEnhancement(function()
         return;
     }
 
-    $('input[type="date"]', this.form).each(function()
+    // ensure calendar is not added twice
+    $('input[type="date"]:only-child', this.form).each(function()
     {
         var id = $(this).prop('id');
         $(this).after('<span class="form-date-calendar-button" data-for="' + id + '"></span>');
     });
+
+    // everything after this can only fire once
+    if (this.form.data('enhanced')) {
+        return;
+    }
 
     this.form.on('click', '.form-date-calendar-button', function(evt)
     {
@@ -69,6 +76,5 @@ jqueryForm.addEnhancement(function()
             });
 
         });
-
     });
 });

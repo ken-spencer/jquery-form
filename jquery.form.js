@@ -13,6 +13,11 @@
 var jqueryForm = function(selector)
 {
     this.form = $(selector).first();
+
+    if (this.form.data('jqueryForm')) {
+        return this.form.data('jqueryForm');
+    }
+
     this.form.data('jqueryForm', this);
 
     this.enhance  = function()
@@ -20,6 +25,9 @@ var jqueryForm = function(selector)
         for (var i = 0, enhancement; enhancement = jqueryForm.enhancements[i]; i++) {
             enhancement.call(this);       
         }
+
+        this.form.data('enhanced', true);
+
 
 /*
         this.permalinks();

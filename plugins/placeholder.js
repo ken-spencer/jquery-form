@@ -2,6 +2,10 @@
 */
 jqueryForm.addEnhancement(function()
 {
+    if (this.form.data('enhanced')) {
+        return;
+    }
+
     var input = document.createElement('input');
 
     if (typeof(input.placeholder) != 'undefined') {

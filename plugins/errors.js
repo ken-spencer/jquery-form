@@ -1,5 +1,9 @@
 jqueryForm.addEnhancement(function()
 {
+    if (this.form.data('enhanced')) {
+        return;
+    }
+
     var handler = new errorHandler(this);
     handler.modernize();
 
@@ -575,7 +579,7 @@ jQuery.fn.checkValidity = function(trigger, focus)
 /* Detect button press and submit form
 */
 //$(document).on("click", 'button[type="submit"]:not([form]), button[type=""]:not([form]), button:not([type]):not([form]), input[type="submit"]:not([form]), input[type="image"]', function(evt)
-$(document).on("click", 'button, input[type="image"], input[type="image"]', function(evt)
+$(document).on("click", 'button, input[type="image"], input[type="submit"]', function(evt)
 {
     var self;
     var form;
