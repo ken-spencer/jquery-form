@@ -8,6 +8,45 @@
             form.enhance();                
         });
     };
+
+    $.fn.submitButtons = function()
+    {
+        this.filter('FORM');
+
+        var buttons = $('button, input[type="image"], input[type="submit"]');
+        var forms = this;
+
+        buttons = buttons.filter(function()
+        {
+            if (this.type && this.type != "submit") {
+                return false;
+            }
+
+            var button = $(this);
+            if (button.attr('form')) {
+                var form = $("#" + $(button).attr('form'));
+            } else {
+                var form = button.closest('form');
+            }
+            
+            // Remove from set if not in lis tof forms
+            if ($(form, forms).length == 0) {
+                return false;
+            }
+
+            return true;
+        });
+
+        
+        return buttons;
+    }
+
+    
+/*
+$(document).on("click", 'button, input[type="image"], input[type="submit"]', function(evt)
+{
+});
+*/
 })(jQuery);
 
 var jqueryForm = function(selector)

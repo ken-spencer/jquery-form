@@ -13,6 +13,8 @@ jqueryForm.addEnhancement(function()
 function errorHandler(jqueryForm)
 {
     this.jqueryForm = jqueryForm;
+    this.jqueryForm.lock = false;
+    
     this.form = jqueryForm.form;
 
     // Form is set not to validate
@@ -618,17 +620,24 @@ $(document).on("click", 'button, input[type="image"], input[type="submit"]', fun
             form.submit();
         }
 
+        if (handler.jqueryForm.lock) {
+            if (false == handler.jqueryForm.lock.checkSubmit()) {
+                evt.preventDefault();    
+            }
+        }
+
         return true;
-    }
-
-    var first = $(":input.invalid", form).addClass('user-error').first();
-
-    if (first.is(':hidden')) {
-        first.trigger('hidden-error-focus');
     } else {
-        first.focus();
+        var first = $(":input.invalid", form).addClass('user-error').first();
+
+        if (first.is(':hidden')) {
+            first.trigger('hidden-error-focus');
+        } else {
+            first.focus();
+        }
+
+        evt.preventDefault();    
     }
 
-    evt.preventDefault();    
 });
 
