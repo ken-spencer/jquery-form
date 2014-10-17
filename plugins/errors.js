@@ -26,6 +26,7 @@ function errorHandler(jqueryForm)
 
     var self = this;
     this._validities = [];
+    this._last_field = null;
 
     this.submitPressed = false;
     
@@ -58,6 +59,12 @@ function errorHandler(jqueryForm)
     })
     .on('focus', ':input', function()
     {
+        // Fixes a boug on radio buttons where clicking focuses & blurs a focused field
+        if (self._last_field && self._last_field.name == this.name) {
+            return;
+        }
+
+        self._last_field = this;
         self.checkValidity(this);
         if ($(this).hasClass('user-error')) {
             self.errorMessage(this);
