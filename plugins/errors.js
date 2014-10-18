@@ -51,11 +51,30 @@ function errorHandler(jqueryForm)
 
     this.form.on('blur', ':input', function(evt)
     {
-        $(this).data('userInteraction', true).addClass('user-interacted');
-        self.checkValidity(this);
-        if ($(this).hasDialog('#form-error-dialog')) {
-            $(this).dialogClose();
+        var input = this;
+        var name = this.name;
+        var last = self._last_field;
+
+        var tags = $(input.nodeName + '[name="' + input.name + '"]', input.form);
+        tags.addClass('user-interacted');
+ 
+        self.checkValidity(input);
+        if ($(input).hasDialog('#form-error-dialog')) {
+            $(input).dialogClose();
         }
+
+        self._last_field = this;
+ 
+        // USE timeout to get around multiple event fires on radio / checkboxes
+        if (self._blurTimeout) {
+            clearTimeout(self._blurTimeout);
+            self._blurTimeout = null;
+        }
+        self._blurTimeout = setTimeout(function()
+        {
+            self._blurTimeout = null;           
+            self._last_field = null;
+        }, 100);
     })
     .on('focus', ':input', function()
     {
@@ -64,11 +83,16 @@ function errorHandler(jqueryForm)
             return;
         }
 
-        self._last_field = this;
-        self.checkValidity(this);
-        if ($(this).hasClass('user-error')) {
-            self.errorMessage(this);
-        }
+        var input = this;
+
+        self._focusTimeout = setTimeout(function()
+        {
+            self.checkValidity(input);
+            if ($(input).hasClass('user-error')) {
+                self.errorMessage(input);
+            }
+
+        }, 50);
     });
 
 
@@ -424,7 +448,7 @@ errorHandler.prototype.checkValidity = function(input)
         list.removeClass('valid');
         list.addClass('invalid');
 
-        if (this.submitPressed || $(input).data('userInteraction')) {
+        if (this.submitPressed || $(input).hasClass('user-interacted')) {
             list.addClass('user-error');
         }
 
