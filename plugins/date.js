@@ -17,7 +17,8 @@ jqueryForm.addEnhancement(function()
     }
 
     // ensure calendar is not added twice
-    $('input[type="date"]:only-child', this.form).each(function()
+ //   $('input[type="date"]:only-child', this.form).each(function()
+    $('input[type="date"]', this.form).each(function()
     {
         var id = $(this).prop('id');
         $(this).after('<span class="form-date-calendar-button" data-for="' + id + '"></span>');
