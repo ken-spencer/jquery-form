@@ -456,8 +456,24 @@ errorHandler.prototype.checkValidity = function(input)
     }
 }
 
-errorHandler.prototype.validate = function()
+errorHandler.prototype.validate = function(selector)
 {
+    var query = selector ? $(selector) : this.form;
+    var node = query.first();
+    var form = node.prop('nodeName') == 'FORM' ? node : node.closest('form');
+
+
+/*
+    if (form.prop('noValidate') || form.attr('novalidate')) {
+        return true;
+    }
+*/
+    if (node.prop('nodeName') == 'FORM') {
+        var list = $(':input',  this.form);
+    } else {
+        list = query.filter(':input');
+    }
+
     if (this.form.prop('noValidate') || this.form.attr('novalidate')) {
         return true;
     }
@@ -465,7 +481,8 @@ errorHandler.prototype.validate = function()
     var self = this;
     var valid = true;
     var checked = {};
-    $(':input',  this.form).each(function()
+//    $(':input',  this.form).each(function()
+    list.each(function()
     {
         // We only want to check fields with same name once
         if (checked[this.name]) {
@@ -524,7 +541,20 @@ errorHandler.prototype.errorMessage = function(input)
 {
     var input = $(input);
     if (jQuery.fn.dialogOpen) {
-        $(input).dialogOpen("<span>" + input.data('_error_message') + "</span>", {'stem' : true, 'id' : 'form-error-dialog'});
+        var error = "<span>" + input.data('_error_message') + "</span>";
+        var dialogOptions = {
+            'stem' : true,
+            'id' : 'form-error-dialog'
+        };
+        
+        
+    /*
+        var list, form;
+        if (input.prop("type") == "radio" && (form = $(input.prop('form'))[0]) && (list = form[input.prop('name')])) {
+        
+        }
+    */
+        $(input).dialogOpen(error, dialogOptions);
     } else {
     }    
 
@@ -586,6 +616,17 @@ jQuery.fn.checkValidity = function(trigger, focus)
     }
 
     var handler = self.errorHandler;
+    var retval = handler.validate(this)
+
+    if (retval == false && trigger) {
+        $(":input.invalid", form).addClass('user-error');
+        var input = $('.invalid', this).addBack(":input.invalid").first();
+        if (focus) {
+            input.focus();
+        }
+    }
+
+/* 
     if (node.prop('nodeName') == 'FORM') {
         var retval = handler.validate()
         if (retval == false && trigger) {
@@ -604,7 +645,7 @@ jQuery.fn.checkValidity = function(trigger, focus)
             }
         }
     }
-
+*/
     return retval;    
 }
 
