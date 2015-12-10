@@ -67,6 +67,35 @@ var jqueryForm = function(selector)
 
         this.form.data('enhanced', true);
 
+        this.form.on("change", ".is-other-field", function()
+        {
+            var id = '#' + $(this).data("other-id");
+            var input = $(id);
+            var cont = input.closest(".other-field");
+
+            if (this.checked) {
+                cont.slideDown(function()
+                {
+                    input.prop('disabled', false);
+                    input.focus();
+                });
+            } else {
+                input.prop('disabled', true);
+                cont.slideUp();
+            }
+        });
+
+        this.form.find(".is-other-field").each(function()
+        {
+            var id = '#' + $(this).data("other-id");
+            var input = $(id);
+            var cont = input.closest(".other-field");
+
+            if (this.checked) {
+                cont.show();
+                input.prop('disabled', false);
+            } 
+        });
 
 /*
         this.permalinks();
