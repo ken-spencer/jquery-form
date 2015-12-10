@@ -90,35 +90,5 @@ jqueryForm.addEnhancement(function()
                 node.show();
             }
         });
-        
-
-return;
-        node.on('focus', function()
-        {
-            node.css('display', 'none');
-            $(field).css('display', '');
-            $(field).focus();
-        });
-
-        $(field).on('focus', function()
-        {
-            node.css('display', 'none');
-            $(field).css('display', '');
-        });
-                                
-        var blur = function()
-        {
-            if ($(field).prop('value').length == 0) {
-                $(field).css('display', 'none');
-                node.css('display', '');
-            } else {
-                node.css('display', 'none');
-                $(field).css('display', '');
-            }
-        }                                                                
-
-        $(field).on('blur change', blur);
-//        blur();
-        $(field).before(node);
     });
 });
